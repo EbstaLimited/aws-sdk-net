@@ -36,7 +36,7 @@ namespace Amazon.DynamoDBv2.DataModel
         /// <summary>
         /// Gets and sets the Test Property.
         /// </summary>
-        public string TestProp { get; set; }
+        public string TestProp { get; }
 
         /// <summary>
         /// 
