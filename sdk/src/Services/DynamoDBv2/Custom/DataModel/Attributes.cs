@@ -26,6 +26,28 @@ namespace Amazon.DynamoDBv2.DataModel
     {
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    public sealed class DynamoDBEbstaTestAttribute : DynamoDBAttribute
+    {
+        // TODO [MTR] DELETE THIS
+        /// <summary>
+        /// Gets and sets the Test Property.
+        /// </summary>
+        public string TestProp { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propVal"></param>
+        public DynamoDBEbstaTestAttribute(string TesProp)
+        {
+            TestProp = TesProp;
+        }
+    }
+
 
     /// <summary>
     /// DynamoDB attribute that marks a class.
