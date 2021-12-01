@@ -42,9 +42,9 @@ namespace Amazon.DynamoDBv2.DataModel
         /// 
         /// </summary>
         /// <param name="propVal"></param>
-        public DynamoDBEbstaTestAttribute(string TesProp)
+        public DynamoDBEbstaTestAttribute(string TestProp)
         {
-            TestProp = TesProp;
+            TestProp = TestProp;
         }
     }
 
