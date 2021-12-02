@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\generator\ServiceClientGeneratorLib\ServiceClientGeneratorLib.csproj" />
-    <ProjectReference Include="..\..\..\src\Core\AWSSDK.Core.Net45.csproj" />
     <ProjectReference Include="..\..\..\src\Services\S3\AWSSDK.S3.Net45.csproj" />
   </ItemGroup>
 

@@ -39,17 +39,13 @@
   </Choose>
 
   <ItemGroup Condition="$(RunAnalyzersDuringBuild)">
-    <Analyzer Include= "..\..\..\..\buildtools\CustomRoslynAnalyzers.dll" />
+    <Analyzer Include="..\..\..\..\buildtools\CustomRoslynAnalyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="**/_bcl35/**"/>
-    <Compile Remove="**/_netstandard/**"/>
-    <Compile Remove="**/obj/**"/>
+    <Compile Remove="**/_bcl35/**" />
+    <Compile Remove="**/_netstandard/**" />
+    <Compile Remove="**/obj/**" />
     <None Remove="**/obj/**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\AWSSDK.Core.Net45.csproj"/>
   </ItemGroup>
 
   <ItemGroup Condition="$(RunAnalyzersDuringBuild)">
@@ -64,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Configuration"/>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
 
 </Project>

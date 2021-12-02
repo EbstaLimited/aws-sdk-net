@@ -42,7 +42,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\IntegrationTests\AWSSDK.IntegrationTestUtilities.Net35.csproj" />
-    <ProjectReference Include="..\..\..\..\src\Core\AWSSDK.Core.Net35.csproj" />
     <ProjectReference Include="..\..\..\..\src\Services\DynamoDBv2\AWSSDK.DynamoDBv2.Net35.csproj" />
     <ProjectReference Include="..\..\..\..\src\Services\S3\AWSSDK.S3.Net35.csproj" />
   </ItemGroup>

@@ -42,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Core\AWSSDK.Core.Net35.csproj" />
     <ProjectReference Include="..\..\src\Services\IdentityManagement\AWSSDK.IdentityManagement.Net35.csproj" />
     <ProjectReference Include="..\..\src\Services\SecurityToken\AWSSDK.SecurityToken.Net35.csproj" />
     <ProjectReference Include="..\..\src\Services\SimpleNotificationService\AWSSDK.SimpleNotificationService.Net35.csproj" />
