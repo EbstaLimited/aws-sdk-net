@@ -5,8 +5,8 @@
     <DefineConstants>DEBUG;TRACE;BCL;BCL45;AWS_ASYNC_API;CODE_ANALYSIS</DefineConstants>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>AWSSDK.Core</AssemblyName>
-    <PackageId>AWSSDK.Core</PackageId>
+    <AssemblyName>AWSSDK.DynamoDBv2</AssemblyName>
+    <PackageId>AWSSDK.DynamoDBv2</PackageId>
 
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
