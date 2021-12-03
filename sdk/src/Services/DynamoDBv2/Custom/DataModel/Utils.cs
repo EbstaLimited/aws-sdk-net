@@ -199,9 +199,30 @@ namespace Amazon.DynamoDBv2.DataModel
             var attributes = new List<DynamoDBAttribute>();
             foreach (var attObj in attObjects)
             {
-                var attribute = attObj as DynamoDBAttribute;
-                if (attribute != null)
-                    attributes.Add(attribute);
+                switch (attObj.GetType().Name)
+                {
+                    case nameof(DynamoDBPropertyAttribute):
+                        var propName = (string)attObj.GetType().GetProperty("AttributeName").GetValue(attObj, null);
+                        attributes.Add(new DynamoDBPropertyAttribute(propName));
+                        break;
+                    case nameof(DynamoDBTableAttribute):
+                        var tableName = (string)attObj.GetType().GetProperty("TableName").GetValue(attObj, null);
+                        attributes.Add(new DynamoDBTableAttribute(tableName));
+                        break;
+                    case nameof(DynamoDBHashKeyAttribute):
+                        attributes.Add(new DynamoDBHashKeyAttribute());
+                        break;
+                    case nameof(DynamoDBIgnoreAttribute):
+                        attributes.Add(new DynamoDBIgnoreAttribute());
+                        break;
+                    case nameof(DynamoDBRangeKeyAttribute):
+                        attributes.Add(new DynamoDBRangeKeyAttribute());
+                        break;
+                    default:
+                        if (attObj is DynamoDBAttribute attribute)
+                            attributes.Add(attribute);
+                        break;
+                }
             }
             return attributes;
         }
@@ -218,11 +239,9 @@ namespace Amazon.DynamoDBv2.DataModel
         private static object[] GetAttributeObjects(MemberInfo targetMemberInfo)
         {
             if (targetMemberInfo == null) throw new ArgumentNullException("targetMemberInfo");
-#if NETSTANDARD
-            object[] attributes = targetMemberInfo.GetCustomAttributes(typeof(DynamoDBAttribute), true).ToArray();
-#else
-            object[] attributes = targetMemberInfo.GetCustomAttributes(typeof(DynamoDBAttribute), true);
-#endif
+
+            object[] attributes = targetMemberInfo.GetCustomAttributes(true).Where(a => a.GetType().Name.StartsWith("DynamoDB")).ToArray();
+
             return attributes;
         }
 
