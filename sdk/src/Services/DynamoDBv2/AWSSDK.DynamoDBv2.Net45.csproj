@@ -6,7 +6,7 @@
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>AWSSDK.DynamoDBv2</AssemblyName>
-    <PackageId>Ebsta.DynamoDBv2</PackageId>
+    <PackageId>AWSSDK.DynamoDBv2</PackageId>
 
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
