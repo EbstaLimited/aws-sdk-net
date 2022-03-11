@@ -127,7 +127,7 @@ namespace Amazon.DynamoDBv2.DataModel
         public static bool ItemsToCollection(Type targetType, IEnumerable<object> items, out object result)
         {
             return targetType.IsArray ?
-                ItemsToArray(targetType, items, out result):  //targetType is Array
+                ItemsToArray(targetType, items, out result) :  //targetType is Array
                 ItemsToIList(targetType, items, out result);  //targetType is IList or has Add method.
         }
 
@@ -185,7 +185,11 @@ namespace Amazon.DynamoDBv2.DataModel
         public static DynamoDBAttribute GetAttribute(ITypeInfo targetTypeInfo)
         {
             if (targetTypeInfo == null) throw new ArgumentNullException("targetTypeInfo");
-            object[] attributes = targetTypeInfo.GetCustomAttributes(TypeFactory.GetTypeInfo(typeof(DynamoDBAttribute)), true);
+
+            object[] attributes = targetTypeInfo.GetCustomAttributes(TypeFactory.GetTypeInfo(typeof(Attribute)), true)
+                                                .Where(a => a.GetType().Name.StartsWith("DynamoDB"))
+                                                .ToArray();
+            
             return GetSingleDDBAttribute(attributes);
         }
         public static DynamoDBAttribute GetAttribute(MemberInfo targetMemberInfo)
@@ -199,11 +203,35 @@ namespace Amazon.DynamoDBv2.DataModel
             var attributes = new List<DynamoDBAttribute>();
             foreach (var attObj in attObjects)
             {
-                var attribute = attObj as DynamoDBAttribute;
-                if (attribute != null)
-                    attributes.Add(attribute);
+                attributes.Add(ConvertAttributeToAwsType(attObj));
             }
             return attributes;
+        }
+
+        private static DynamoDBAttribute ConvertAttributeToAwsType(object attObj)
+        {
+            switch (attObj.GetType().Name)
+            {
+                case nameof(DynamoDBPropertyAttribute):
+                    var propName = (string)attObj.GetType().GetProperty("AttributeName").GetValue(attObj, null);
+                    return new DynamoDBPropertyAttribute(propName);
+
+                case nameof(DynamoDBTableAttribute):
+                    var tableName = (string)attObj.GetType().GetProperty("TableName").GetValue(attObj, null);
+                    return new DynamoDBTableAttribute(tableName);
+
+                case nameof(DynamoDBHashKeyAttribute):
+                    return new DynamoDBHashKeyAttribute();
+
+                case nameof(DynamoDBIgnoreAttribute):
+                    return new DynamoDBIgnoreAttribute();
+
+                case nameof(DynamoDBRangeKeyAttribute):
+                    return new DynamoDBRangeKeyAttribute();
+
+                default:
+                    return attObj as DynamoDBAttribute;
+            }
         }
 
         private static DynamoDBAttribute GetSingleDDBAttribute(object[] attributes)
@@ -211,18 +239,17 @@ namespace Amazon.DynamoDBv2.DataModel
             if (attributes.Length == 0)
                 return null;
             if (attributes.Length == 1)
-                return (attributes[0] as DynamoDBAttribute);
+                return ConvertAttributeToAwsType(attributes[0]);
+            
             throw new InvalidOperationException("Cannot have multiple DynamoDBAttributes on a single member");
         }
 
         private static object[] GetAttributeObjects(MemberInfo targetMemberInfo)
         {
             if (targetMemberInfo == null) throw new ArgumentNullException("targetMemberInfo");
-#if NETSTANDARD
-            object[] attributes = targetMemberInfo.GetCustomAttributes(typeof(DynamoDBAttribute), true).ToArray();
-#else
-            object[] attributes = targetMemberInfo.GetCustomAttributes(typeof(DynamoDBAttribute), true);
-#endif
+
+            object[] attributes = targetMemberInfo.GetCustomAttributes(true).Where(a => a.GetType().Name.StartsWith("DynamoDB")).ToArray();
+
             return attributes;
         }
 
@@ -245,7 +272,7 @@ namespace Amazon.DynamoDBv2.DataModel
         private static ITypeInfo[][] validArrayConstructorInputs = new ITypeInfo[][]
         {
             //supports one dimension Array only
-            new ITypeInfo[] { TypeFactory.GetTypeInfo(typeof(int)) } 
+            new ITypeInfo[] { TypeFactory.GetTypeInfo(typeof(int)) }
         };
         private static ITypeInfo[][] validConverterConstructorInputs = new ITypeInfo[][]
         {
@@ -257,7 +284,7 @@ namespace Amazon.DynamoDBv2.DataModel
         {
             return InstantiateHelper(objectType, validConverterConstructorInputs, new object[] { context });
         }
-        public static object InstantiateArray(Type objectType,int length)
+        public static object InstantiateArray(Type objectType, int length)
         {
             return InstantiateHelper(objectType, validArrayConstructorInputs, new object[] { length });
         }
@@ -291,7 +318,7 @@ namespace Amazon.DynamoDBv2.DataModel
         }
         private static IEnumerable<ConstructorInfo> GetConstructors(ITypeInfo typeInfo, ITypeInfo[][] validConstructorInputs)
         {
-            foreach(var inputTypes in validConstructorInputs)
+            foreach (var inputTypes in validConstructorInputs)
             {
                 var constructor = typeInfo.GetConstructor(inputTypes);
                 if (constructor != null)
@@ -382,7 +409,7 @@ namespace Amazon.DynamoDBv2.DataModel
             return false;
         }
 
-#endregion
+        #endregion
 
     }
 }
